@@ -303,6 +303,17 @@
     gradientLayer1.startPoint = CGPointMake(0, 0);
     gradientLayer1.endPoint = CGPointMake(1, 0);
     [self.view.layer addSublayer:gradientLayer1];
+    
+    
+    CAGradientLayer *gradientLayer2 = [CAGradientLayer layer];
+    gradientLayer2.frame = CGRectMake(10, 300, 90, 6);
+    gradientLayer2.colors = @[(id)[UIColor orangeColor].CGColor,(id)[UIColor redColor].CGColor,(id)[UIColor blueColor].CGColor,(id)[UIColor purpleColor].CGColor];
+    gradientLayer2.locations = @[@0.3,@0.6,@0.8,@1.0];
+    gradientLayer2.startPoint = CGPointMake(0, 0);
+    gradientLayer2.endPoint = CGPointMake(1.0, 0);
+    gradientLayer2.cornerRadius = 8.0;
+    [self.view.layer addSublayer:gradientLayer2];
+    
 }
 
 
