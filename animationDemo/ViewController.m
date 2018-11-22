@@ -14,6 +14,9 @@
 
 @property (strong, nonatomic) UILabel *animationLab;
 
+@property (strong, nonatomic) UIImageView *firstCircle;
+@property (strong, nonatomic) CAShapeLayer *firstCircleShapeLayer;
+
 @end
 
 @implementation ViewController
@@ -21,14 +24,21 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    //animation
+    [self animationLabelView];
+    
+    //UIBezierPath
     [self dongHua];
     
-    [self animationLabelView];
+    [self createLayer];
+    
+    [self createGradientLayer];
     
     
     // Do any additional setup after loading the view, typically from a nib.
 }
 
+#pragma mark - UIBezierPath
 //圆形循环
 - (void)dongHua {
     //路径
@@ -236,4 +246,67 @@
 
 
 
+#pragma mark - CALayer
+- (void)createLayer {
+    //mask是CALayer的属性，mask也是图层。CALayer的mask的应用：创建一个图层或者一个视图，设置图层或者一个视图的mask，mask图层的布局是相对原图层的，最后显示的是重叠部分的形状和原图层的颜色。如果没有重叠部分就什么也不显示
+    CALayer *aLayer = [CALayer layer];
+    aLayer.frame = CGRectMake(10, 150, 40, 40);
+    aLayer.backgroundColor = [UIColor redColor].CGColor;
+    [self.view.layer addSublayer:aLayer];
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+//    UIBezierPath *path = [UIBezierPath bezierPathWithRect:CGRectMake(0, 0, 30, 40)];//相对aLayer的frame,因为mask在aLayer上。不要直接设置mask图层的frame
+//    shapeLayer.path = path.CGPath;  //可以设置路径，也可以设置frame,但都要相对原图层布局
+    shapeLayer.frame = CGRectMake(0, 0, 20, 30);
+    shapeLayer.backgroundColor = [UIColor blackColor].CGColor;
+    aLayer.mask = shapeLayer;
+    
+    
+    /*创建蓝色矩形图层，再创建小一点的红色圆形，将红色圆形作为蓝色矩形的mask,最后显示的是重叠部分的形状和原图层的颜色。如果没有重叠部分就什么也不显示 */
+    //创建一个蓝色的Layer
+    CALayer *foregroundLayer        = [CALayer layer];
+    foregroundLayer.bounds          = CGRectMake(0, 0, 100, 100);
+    foregroundLayer.backgroundColor = [UIColor blueColor].CGColor;
+    //创建一个路径
+    UIBezierPath *apath = [UIBezierPath bezierPathWithOvalInRect:CGRectMake(0, 0, 100, 100)];//相对aLayer的frame,因为mask在aLayer上。
+    //创建maskLayer
+    CAShapeLayer *maskLayer = [CAShapeLayer layer];
+    maskLayer.path = apath.CGPath;  //路径
+    maskLayer.fillColor = [UIColor redColor].CGColor;  //填充路径颜色
+    maskLayer.fillRule = kCAFillRuleEvenOdd;
+//    maskLayer.frame = CGRectMake(0, 0, 100, 100);
+//    maskLayer.backgroundColor = [UIColor redColor].CGColor;
+    //设置位置
+    foregroundLayer.position = self.view.center;
+    //设置mask
+    foregroundLayer.mask = maskLayer;
+    [self.view.layer addSublayer:foregroundLayer];
+    
+}
+
+#pragma mark - CAGradientLayer
+- (void)createGradientLayer {
+    /*
+     CAGradientLayer是CALayer的一个特殊子类，用于生成颜色渐变的图层，使用较为方便，下面介绍下它的相关属性：
+     colors 渐变的颜色
+     locations 渐变颜色的分割点
+     startPoint&endPoint 颜色渐变的方向，范围在(0,0)与(1.0,1.0)之间，如(0,0)(1.0,0)代表水平方向渐变,(0,0)(0,1.0)代表竖直方向渐变
+     */
+    CAGradientLayer *gradientLayer = [CAGradientLayer layer];
+    gradientLayer.frame = CGRectMake(10, 200, 60, 20);
+    gradientLayer.colors = @[(id)[UIColor redColor].CGColor, (id)[UIColor orangeColor].CGColor, (id)[UIColor purpleColor].CGColor];
+    gradientLayer.locations = @[@0.2,@0.6,@1];
+    [self.view.layer addSublayer:gradientLayer];
+    
+    
+    CAGradientLayer *gradientLayer1 = [CAGradientLayer layer];
+    gradientLayer1.frame = CGRectMake(20, 230, 60, 20);
+    gradientLayer1.colors = @[(id)[UIColor redColor].CGColor, (id)[UIColor orangeColor].CGColor, (id)[UIColor purpleColor].CGColor];
+    gradientLayer1.locations = @[@0.2,@0.6,@1];
+    gradientLayer1.startPoint = CGPointMake(0, 0);
+    gradientLayer1.endPoint = CGPointMake(1, 0);
+    [self.view.layer addSublayer:gradientLayer1];
+}
+
+
 @end
+
