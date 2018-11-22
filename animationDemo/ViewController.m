@@ -14,8 +14,6 @@
 
 @property (strong, nonatomic) UILabel *animationLab;
 
-@property (strong, nonatomic) UIImageView *firstCircle;
-@property (strong, nonatomic) CAShapeLayer *firstCircleShapeLayer;
 
 @end
 
