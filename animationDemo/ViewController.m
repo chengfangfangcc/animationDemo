@@ -279,6 +279,21 @@
     foregroundLayer.mask = maskLayer;
     [self.view.layer addSublayer:foregroundLayer];
     
+    
+    UILabel *firstLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 340, 100, 30)];
+    firstLab.text = @"label cff demo test";
+    firstLab.font = [UIFont systemFontOfSize:12];
+    firstLab.textColor = [UIColor blackColor];
+    [self.view addSubview:firstLab];
+    UILabel *secondLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 340, 100, 30)];
+    secondLab.text = @"label cff demo test";
+    secondLab.font = [UIFont systemFontOfSize:12];
+    secondLab.textColor = [UIColor redColor];
+    [self.view addSubview:secondLab];
+    CAShapeLayer *testShapeLayer = [CAShapeLayer layer];
+    testShapeLayer.frame = CGRectMake(20, 0, 60, 30);  //相对secondLab的布局
+    testShapeLayer.backgroundColor = [UIColor orangeColor].CGColor;
+    secondLab.layer.mask = testShapeLayer;
 }
 
 #pragma mark - CAGradientLayer
