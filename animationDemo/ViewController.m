@@ -11,9 +11,14 @@
 #define kRadianToDegrees(x) (M_PI * (x) / 180.0)
 
 @interface ViewController ()
+{
+    CAShapeLayer *circle;
+    NSInteger num;
+}
 
 @property (strong, nonatomic) UILabel *animationLab;
 
+@property (strong, nonatomic) CADisplayLink *link;
 
 @end
 
@@ -280,12 +285,12 @@
     [self.view.layer addSublayer:foregroundLayer];
     
     
-    UILabel *firstLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 340, 100, 30)];
+    UILabel *firstLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 380, 100, 30)];
     firstLab.text = @"label cff demo test";
     firstLab.font = [UIFont systemFontOfSize:12];
     firstLab.textColor = [UIColor blackColor];
     [self.view addSubview:firstLab];
-    UILabel *secondLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 340, 100, 30)];
+    UILabel *secondLab = [[UILabel alloc] initWithFrame:CGRectMake(10, 380, 100, 30)];
     secondLab.text = @"label cff demo test";
     secondLab.font = [UIFont systemFontOfSize:12];
     secondLab.textColor = [UIColor redColor];
@@ -294,6 +299,47 @@
     testShapeLayer.frame = CGRectMake(20, 0, 60, 30);  //相对secondLab的布局
     testShapeLayer.backgroundColor = [UIColor orangeColor].CGColor;
     secondLab.layer.mask = testShapeLayer;
+    
+    
+    
+    
+    //创建一个CAShape
+    CALayer *bgLayer = [CALayer layer];
+    //设置大小颜色和位置
+    bgLayer.bounds = CGRectMake(0, 0, 200, 200);
+    bgLayer.backgroundColor = [UIColor redColor].CGColor;
+    bgLayer.position = self.view.center;
+    //创建一个CAShapeLayer作为MaskLayer
+    circle = [CAShapeLayer layer];
+    //设置路径
+    circle.path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(100, 100)
+                                                      radius:20
+                                                  startAngle:0
+                                                    endAngle:2 * M_PI
+                                                   clockwise:YES].CGPath;
+    circle.fillColor = [UIColor greenColor].CGColor;
+    circle.fillRule  = kCAFillRuleEvenOdd;
+    //设置maskLayer
+    bgLayer.mask = circle;
+    [self.view.layer addSublayer:bgLayer];
+    
+    //添加计时器
+    self.link = [CADisplayLink displayLinkWithTarget:self selector:@selector(action)];
+    [self.link addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+}
+
+- (void)action {
+    num ++;
+    circle.path = [UIBezierPath bezierPathWithArcCenter:CGPointMake(100, 100)
+                                                      radius:20 + num
+                                                  startAngle:0
+                                                    endAngle:2 * M_PI
+                                                   clockwise:YES].CGPath;
+    
+    if (num > 100) {
+        self.link = nil;
+        [self.link invalidate];
+    }
 }
 
 #pragma mark - CAGradientLayer
